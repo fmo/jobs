@@ -1,0 +1,14 @@
+[
+  {
+    "Name": "Ping Google",
+    "Interval": 200,
+    "Timeout": 500,
+    "Command": "./scripts/pinger.sh google.com"
+  },
+  {
+    "Name": "Ping Yahoo",
+    "Interval": 200,
+    "Timeout": 500,
+    "Command": "./scripts/pinger.sh yahoo.com"
+  }
+]
