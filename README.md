@@ -27,6 +27,6 @@ Or build it manually:
 
 `go build -o fmoj .`
 
-🛠 Usage
+## 🛠 Usage
 
 After downloading the binary, you'll need to also copy the jobs.json file and the scripts/ directory into the same directory where the binary will run.
