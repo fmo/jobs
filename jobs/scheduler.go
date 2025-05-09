@@ -25,6 +25,10 @@ func (j *Job) Start(ctx context.Context) {
 			case <-ticker.C:
 				go func() {
 					split := strings.Fields(j.Command)
+					if len(split) < 2 {
+						fmt.Printf("[%s] WARNING: Command or parameter is missing\n", j.Name)
+						return
+					}
 
 					execCtx := ctx
 					if j.Timeout > 0 {
