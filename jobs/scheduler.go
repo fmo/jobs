@@ -8,11 +8,16 @@ import (
 	"time"
 )
 
+type Log struct {
+	Message string
+}
+
 type Job struct {
-	Name     string
-	Interval time.Duration
-	Timeout  time.Duration
-	Command  string
+	Name       string
+	Interval   time.Duration
+	Timeout    time.Duration
+	Command    string
+	LogChannel chan Log
 }
 
 func (j *Job) Start(ctx context.Context) {
@@ -26,7 +31,7 @@ func (j *Job) Start(ctx context.Context) {
 				go func() {
 					split := strings.Fields(j.Command)
 					if len(split) < 2 {
-						fmt.Printf("[%s] WARNING: Command or parameter is missing\n", j.Name)
+						j.LogChannel <- Log{Message: fmt.Sprintf("[%s] WARNING: Command or parameter is missing\n", j.Name)}
 						return
 					}
 
@@ -39,9 +44,9 @@ func (j *Job) Start(ctx context.Context) {
 					cmd := exec.CommandContext(execCtx, split[0], split[1:]...)
 					output, err := cmd.CombinedOutput()
 					if err != nil {
-						fmt.Printf("[%s] ERROR: %v\n", j.Name, err)
+						j.LogChannel <- Log{Message: fmt.Sprintf("[%s] ERROR: %v\n", j.Name, err)}
 					}
-					fmt.Println(string(output))
+					j.LogChannel <- Log{Message: string(output)}
 				}()
 			case <-ctx.Done():
 				return

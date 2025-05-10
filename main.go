@@ -31,7 +31,16 @@ func main() {
 		panic(err)
 	}
 
+	logChannel := make(chan jobs.Log)
+
+	go func() {
+		for log := range logChannel {
+			fmt.Println(log.Message)
+		}
+	}()
+
 	for _, job := range j {
+		job.LogChannel = logChannel
 		job.Start(ctx)
 	}
 
